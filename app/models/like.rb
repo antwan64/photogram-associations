@@ -26,8 +26,11 @@ class Like < ApplicationRecord
 
   has_many(:fans, through: :likes, source: :fan)
 
-  #belongs_to(:photo)
-  #belongs_to(:fan, { :class_name => 'User', :foreign_key => 'fan_id' })
+  belongs_to(:fan,
+    class_name: "User",
+    foreign_key: "fan_id",
+    required: false
+  )
 
   def photo
     my_photo_id = self.photo_id
