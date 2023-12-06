@@ -24,15 +24,10 @@ class Like < ApplicationRecord
 
   # Like#photo: returns a row from the photo table associated to this like by the photo_id column
 
-  def fan
-    my_fan_id = self.fan_id
+  has_many(:fans, through: :likes, source: :fan)
 
-    matching_users = User.where({ :id => my_fan_id })
-
-    the_user = matching_users.at(0)
-
-    return the_user
-  end
+  #belongs_to(:photo)
+  #belongs_to(:fan, { :class_name => 'User', :foreign_key => 'fan_id' })
 
   def photo
     my_photo_id = self.photo_id

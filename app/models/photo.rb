@@ -29,45 +29,39 @@ class Photo < ApplicationRecord
 
   # Photo#fans: returns rows from the users table associated to this photo through its likes
 
-  def poster
-    my_owner_id = self.owner_id
+  belongs_to(:poster,
+    class_name: "User",
+    foreign_key: "owner_id",
+    required: false
+  )
 
-    matching_users = User.where({ :id => my_owner_id })
+  has_many(:comments,
+  foreign_key: "photo_id"
+  )
 
-    the_user = matching_users.at(0)
+  has_many(:likes,
+  foreign_key: "photo_id"
+  )
 
-    return the_user
-  end
+  #has_many(:likes)
+  #has_many(:fans, { :through => :likes, :source => :fan })
 
-  def comments
-    my_id = self.id
+  has_many(:fans, through: :likes, source: :fan)
 
-    matching_comments = Comment.where({ :photo_id => self.id })
 
-    return matching_comments
-  end
-
-  def likes
-    my_id = self.id
-
-    matching_likes = Like.where({ :photo_id => self.id })
-
-    return matching_likes
-  end
-
-  def fans
-    my_likes = self.likes
-    
-    array_of_user_ids = Array.new
-
-    my_likes.each do |a_like|
-      array_of_user_ids.push(a_like.fan_id)
-    end
-
-    matching_users = User.where({ :id => array_of_user_ids })
-
-    return matching_users
-  end
+ # def fans
+ #   my_likes = self.likes
+ #   
+ #   array_of_user_ids = Array.new
+#
+ #   my_likes.each do |a_like|
+ #     array_of_user_ids.push(a_like.fan_id)
+ #   end
+#
+ #   matching_users = User.where({ :id => array_of_user_ids })
+#
+ #   return matching_users
+#  end
 
   def fan_list
     my_fans = self.fans
